@@ -80,7 +80,7 @@ function updatePagination(products) {
     pageDropdown.appendChild(option);
   }
 
-    paginationContainer.appendChild(pageButton);
+    paginationContainer.appendChild(pageDropdown);
   }
 
 

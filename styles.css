@@ -8,9 +8,9 @@ body {
 
 }
 #filters {
-    width: 250px; /* Adjust the width as needed */
+    width: 250px; 
     padding: 20px;
-    background-color: #f0f0f0; /* Optional: Add a background color to the filters */
+    background-color: #f0f0f0; 
 }
 
 .product-grid {
