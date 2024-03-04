@@ -2,6 +2,16 @@ body {
   font-family: "Arial", sans-serif;
   margin: 0;
 }
+.container {
+  display: flex;
+  flex-direction: row;
+
+}
+#filters {
+    width: 250px; /* Adjust the width as needed */
+    padding: 20px;
+    background-color: #f0f0f0; /* Optional: Add a background color to the filters */
+}
 
 .product-grid {
   display: flex;
@@ -72,4 +82,18 @@ body {
   right: 10px;
   font-size: 20px;
   cursor: pointer;
+}
+.filter-pill {
+  display: inline-block;
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.pill-remove {
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: bold;
 }
