@@ -1,15 +1,34 @@
 let products;
 
 document.addEventListener("DOMContentLoaded", () => {
-  //fetch from API
+
   fetch("https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline")
     .then((response) => response.json())
     .then((data) => {
       products = data;
       displayProducts(products);
+
+      const colorFilterDropdown = document.getElementById("colorFilters");
+      const uniqueColors = getUniqueColors(products);
+      uniqueColors.forEach((color) => {
+        const option = document.createElement("option");
+        option.value = color;
+        option.text = color;
+        colorFilterDropdown.add(option);
+      });
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
+function getUniqueColors(products) {
+  const uniqueColors = new Set();
+  products.forEach((product) => {
+    product.product_colors.forEach((color) => {
+      uniqueColors.add(color.colour_name);
+    });
+  });
+  return Array.from(uniqueColors);
+}
+
 
 function displayProducts(products) {
   const gridContainer = document.getElementById("product-grid");
@@ -81,6 +100,7 @@ function applyFilters() {
   const eyelinerFilter = document.getElementById("eyelinerFilter").checked;
   const fourStarFilter = document.getElementById("fourStarFilter").checked;
   const threeStarFilter = document.getElementById("threeStarFilter").checked;
+  const selectedColor = document.getElementById("colorFilters").value;
 
  
   const filteredProducts = products.filter((product) => {
@@ -110,6 +130,12 @@ function applyFilters() {
     if ((fourStarFilter && rating < 4) || (threeStarFilter && rating < 3)) {
       return false;
     }
+      if (selectedColor !== "all") {
+        const productColors = product.product_colors.map(
+          (color) => color.colour_name
+        );
+        return productColors.includes(selectedColor);
+      }
     return true;
   });
 
