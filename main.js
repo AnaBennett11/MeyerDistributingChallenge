@@ -69,3 +69,52 @@ function closeModal() {
   const modal = document.getElementById("modal");
   modal.style.display = "none";
 }
+
+function applyFilters() {
+
+  const priceFilter = document.getElementById("priceFilter").value;
+  const lipstickFilter = document.getElementById("lipstickFilter").checked;
+  const eyeshadowFilter = document.getElementById("eyeshadowFilter").checked;
+  const foundationFilter = document.getElementById("foundationFilter").checked;
+  const bronzerFilter = document.getElementById("bronzerFilter").checked;
+  const blushFilter = document.getElementById("blushFilter").checked;
+  const eyelinerFilter = document.getElementById("eyelinerFilter").checked;
+  const fourStarFilter = document.getElementById("fourStarFilter").checked;
+  const threeStarFilter = document.getElementById("threeStarFilter").checked;
+
+ 
+  const filteredProducts = products.filter((product) => {
+ 
+    const price = parseFloat(product.price.replace("$", ""));
+    if (priceFilter !== "all") {
+      const [min, max] = priceFilter.split("-").map(parseFloat);
+      if (price < min || price > max) {
+        return false;
+      }
+    }
+
+    
+    if (
+      (lipstickFilter && !product.product_type.includes("lipstick")) ||
+      (eyeshadowFilter && !product.product_type.includes("eyeshadow")) ||
+      (foundationFilter && !product.product_type.includes("foundation")) ||
+      (bronzerFilter && !product.product_type.includes("bronzer")) ||
+      (blushFilter && !product.product_type.includes("blush")) ||
+      (eyelinerFilter && !product.product_type.includes("eyeliner"))
+    ) {
+      return false;
+    }
+
+    
+    const rating = parseFloat(product.rating);
+    if ((fourStarFilter && rating < 4) || (threeStarFilter && rating < 3)) {
+      return false;
+    }
+    return true;
+  });
+
+   const gridContainer = document.getElementById("product-grid");
+   gridContainer.innerHTML = "";
+
+  displayProducts(filteredProducts);
+}
