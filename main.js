@@ -1,4 +1,8 @@
 let products;
+const itemsPerPageSelect = document.getElementById("itemsPerPage");
+let currentPage = 1;
+let itemsPerPage = parseInt(itemsPerPageSelect.value);
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -8,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((response) => response.json())
     .then((data) => {
       products = data;
-      displayProducts(products);
+      displayProducts(products, currentPage);
 
       const colorFilterDropdown = document.getElementById("colorFilters");
       const uniqueColors = getUniqueColors(products);
@@ -18,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         option.text = color;
         colorFilterDropdown.add(option);
       });
+       updatePagination(products);
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
@@ -31,10 +36,16 @@ function getUniqueColors(products) {
   return Array.from(uniqueColors);
 }
 
-function displayProducts(products) {
+function displayProducts(products, page) {
   const gridContainer = document.getElementById("product-grid");
+  gridContainer.innerHTML = "";
 
-  products.forEach((product) => {
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedProducts = products.slice(startIndex, endIndex);
+
+
+  displayedProducts.forEach((product) => {
     const productCard = document.createElement("div");
     productCard.classList.add("product-card");
 
@@ -50,6 +61,28 @@ function displayProducts(products) {
     gridContainer.appendChild(productCard);
   });
 }
+function updatePagination(products) {
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const paginationContainer = document.getElementById("pagination");
+  paginationContainer.innerHTML = "";
+
+    const pageDropdown = document.createElement("select");
+  pageDropdown.addEventListener("change", () => {
+    currentPage = parseInt(pageDropdown.value);
+    displayProducts(products, currentPage);
+  });
+
+  for (let i = 1; i <= totalPages; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.innerText = i;
+    pageDropdown.appendChild(option);
+  }
+
+    paginationContainer.appendChild(pageButton);
+  }
+
+
 
 function openModal(productId) {
   const modal = document.getElementById("modal");
@@ -67,12 +100,12 @@ function openModal(productId) {
       <a href="${
         selectedProduct.product_link
       }" target="_blank" class="product-link-btn">Button to Product Page</a>
-      <!-- Add more buttons or links as needed -->
+  
 
       <div class="color-list">
         <p>Available Colors:</p>
         <ul>
-          <!-- Logic to dynamically populate colors based on the product -->
+         
           ${selectedProduct.product_colors
             .map((color) => `<li>${color.colour_name}</li>`)
             .join("")}
@@ -98,6 +131,8 @@ function applyFilters() {
   const fourStarFilter = document.getElementById("fourStarFilter").checked;
   const threeStarFilter = document.getElementById("threeStarFilter").checked;
   const selectedColor = document.getElementById("colorFilters").value;
+ 
+
 
   addFilterPill("Price", priceFilter);
   addCheckboxFilterPill("Lipstick", lipstickFilter, removeFilter);
@@ -160,7 +195,10 @@ function applyFilters() {
   gridContainer.innerHTML = "";
 
   displayProducts(filteredProducts);
+  updatePagination(filteredProducts);
+
 }
+
 function addFilterPill(label, value) {
   if (value !== "all") {
     const filterPillsContainer = document.getElementById("filterPills");
@@ -225,3 +263,8 @@ function removeFilter(label) {
   }
   applyFilters();
 }
+itemsPerPageSelect.addEventListener("change", () => {
+  itemsPerPage = parseInt(itemsPerPageSelect.value);
+  displayProducts(products, currentPage);
+  updatePagination(products);
+});
