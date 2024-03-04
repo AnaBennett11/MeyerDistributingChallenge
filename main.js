@@ -1,8 +1,10 @@
 let products;
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  fetch("https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline")
+document.addEventListener("DOMContentLoaded", () => {
+  fetch(
+    "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
+  )
     .then((response) => response.json())
     .then((data) => {
       products = data;
@@ -29,11 +31,10 @@ function getUniqueColors(products) {
   return Array.from(uniqueColors);
 }
 
-
 function displayProducts(products) {
   const gridContainer = document.getElementById("product-grid");
 
-  products.forEach(product => {
+  products.forEach((product) => {
     const productCard = document.createElement("div");
     productCard.classList.add("product-card");
 
@@ -46,18 +47,16 @@ function displayProducts(products) {
         <button class="view-more-btn" onclick="openModal(${product.id})">View More</button>
       </div>`;
 
-      gridContainer.appendChild(productCard);
+    gridContainer.appendChild(productCard);
   });
 }
 
 function openModal(productId) {
-    const modal = document.getElementById('modal');
-    modal.innerHTML = "";
+  const modal = document.getElementById("modal");
+  modal.innerHTML = "";
 
-    const selectedProduct = products.find(
-      (product) => product.id === productId
-    );
-     modal.innerHTML = `
+  const selectedProduct = products.find((product) => product.id === productId);
+  modal.innerHTML = `
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
       <img src="${selectedProduct.image_link}" alt="${selectedProduct.name}">
@@ -81,8 +80,7 @@ function openModal(productId) {
       </div>
     </div>
   `;
-   modal.style.display = 'block';
-
+  modal.style.display = "block";
 }
 function closeModal() {
   const modal = document.getElementById("modal");
@@ -90,7 +88,6 @@ function closeModal() {
 }
 
 function applyFilters() {
-
   const priceFilter = document.getElementById("priceFilter").value;
   const lipstickFilter = document.getElementById("lipstickFilter").checked;
   const eyeshadowFilter = document.getElementById("eyeshadowFilter").checked;
@@ -102,9 +99,18 @@ function applyFilters() {
   const threeStarFilter = document.getElementById("threeStarFilter").checked;
   const selectedColor = document.getElementById("colorFilters").value;
 
- 
+  addFilterPill("Price", priceFilter);
+  addCheckboxFilterPill("Lipstick", lipstickFilter, removeFilter);
+  addCheckboxFilterPill("Eyeshadow", eyeshadowFilter, removeFilter);
+  addCheckboxFilterPill("Foundation", foundationFilter, removeFilter);
+  addCheckboxFilterPill("Bronzer", bronzerFilter, removeFilter);
+  addCheckboxFilterPill("Blush", blushFilter, removeFilter);
+  addCheckboxFilterPill("Eyeliner", eyelinerFilter, removeFilter);
+  addCheckboxFilterPill("4 Stars & above", fourStarFilter, removeFilter);
+  addCheckboxFilterPill("3 Stars & above", threeStarFilter, removeFilter);
+  addFilterPill("Color", selectedColor);
+
   const filteredProducts = products.filter((product) => {
- 
     const price = parseFloat(product.price.replace("$", ""));
     if (priceFilter !== "all") {
       const [min, max] = priceFilter.split("-").map(parseFloat);
@@ -113,7 +119,6 @@ function applyFilters() {
       }
     }
 
-    
     if (
       (lipstickFilter && !product.product_type.includes("lipstick")) ||
       (eyeshadowFilter && !product.product_type.includes("eyeshadow")) ||
@@ -125,22 +130,98 @@ function applyFilters() {
       return false;
     }
 
-    
     const rating = parseFloat(product.rating);
     if ((fourStarFilter && rating < 4) || (threeStarFilter && rating < 3)) {
       return false;
     }
-      if (selectedColor !== "all") {
-        const productColors = product.product_colors.map(
-          (color) => color.colour_name
-        );
-        return productColors.includes(selectedColor);
-      }
+    if (selectedColor !== "all") {
+      const productColors = product.product_colors.map(
+        (color) => color.colour_name
+      );
+      return productColors.includes(selectedColor);
+    }
     return true;
   });
+ 
+  const sortSelect = document.getElementById("sortSelect");
+  const selectedSortOption = sortSelect.value;
 
-   const gridContainer = document.getElementById("product-grid");
-   gridContainer.innerHTML = "";
+  
+  if (selectedSortOption === "name") {
+    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (selectedSortOption === "price") {
+    filteredProducts.sort((a, b) => {
+      const priceA = parseFloat(a.price.replace("$", ""));
+      const priceB = parseFloat(b.price.replace("$", ""));
+      return priceA - priceB;
+    });
+  }
+  const gridContainer = document.getElementById("product-grid");
+  gridContainer.innerHTML = "";
 
   displayProducts(filteredProducts);
+}
+function addFilterPill(label, value) {
+  if (value !== "all") {
+    const filterPillsContainer = document.getElementById("filterPills");
+    const pill = document.createElement("div");
+    pill.classList.add("filter-pill");
+    pill.innerHTML = `${label}: ${value} <span class="pill-remove" onclick="removeFilter('${label}')">&times;</span>`;
+    filterPillsContainer.appendChild(pill);
+  }
+}
+
+function addCheckboxFilterPill(label, isChecked) {
+  if (isChecked) {
+    addFilterPill(label, "Yes");
+  }
+}
+
+function removeFilter(label) {
+  const filterPillsContainer = document.getElementById("filterPills");
+  const filterPills =
+    filterPillsContainer.getElementsByClassName("filter-pill");
+
+  if (
+    label === "Price" ||
+    label === "Lipstick" ||
+    label === "Eyeshadow" ||
+    label === "Foundation" ||
+    label === "Bronzer" ||
+    label === "Blush" ||
+    label === "Eyeliner" ||
+    label === "4 Stars & above" ||
+    label === "3 Stars & above" ||
+    label === "Color"
+  ) {
+    for (let i = 0; i < filterPills.length; i++) {
+      const pill = filterPills[i];
+      if (pill.innerText.includes(`${label}:`)) {
+        filterPillsContainer.removeChild(pill);
+        break;
+      }
+    }
+    if (label === "Price") {
+      document.getElementById("priceFilter").value = "all";
+    } else if (label === "Lipstick") {
+      document.getElementById("lipstickFilter").checked = false;
+    } else if (label === "Eyeshadow") {
+      document.getElementById("eyeshadowFilter").checked = false;
+    } else if (label === "Foundation") {
+      document.getElementById("foundationFilter").checked = false;
+    } else if (label === "Bronzer") {
+      document.getElementById("bronzerFilter").checked = false;
+    } else if (label === "Blush") {
+      document.getElementById("blushFilter").checked = false;
+    } else if (label === "Eyeliner") {
+      document.getElementById("eyelinerFilter").checked = false;
+    } else if (label === "4 Stars & above") {
+      document.getElementById("fourStarFilter").checked = false;
+    } else if (label === "3 Stars & above") {
+      document.getElementById("threeStarFilter").checked = false;
+    } else if (label === "Color") {
+      document.getElementById("colorFilters").value = "all";
+    }
+  }
+  applyFilters();
 }
