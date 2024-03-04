@@ -7,6 +7,48 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div id="filters">
+      <label>
+        Price Range:
+        <select id="priceFilter">
+          <option value="all">All</option>
+          <option value="0-10">$0 - $10</option>
+          <option value="10-20">$10 - $20</option>
+          <option value="20-50">$20 - $50</option>
+        </select>
+      </label>
+      <label>
+        Product Type:
+        <input type="checkbox" id="lipstickFilter" value="lipstick" /> Lipstick
+        <input type="checkbox" id="eyeshadowFilter" value="eyeshadow" />
+        Eyeshadow
+         <input type="checkbox" id="foundationFilter" value="foundation" />
+        Foundation
+        <input type="checkbox" id="bronzerFilter" value="bronzer" /> Bronzer
+         <input type="checkbox" id="blushFilter" value="blush" />
+        Blush
+         <input type="checkbox" id="eyelinerFilter" value="eyesliner" />
+        Eyeliner
+      </label>
+      <label>
+        Rating:
+        <input type="checkbox" id="fourStarFilter" value="4" /> 4 Stars & above
+        <input type="checkbox" id="threeStarFilter" value="3" /> 3 Stars & above
+      </label>
+       <label>
+      Product Colors:
+      <div id="colorFilters"></div>
+    </label>
+     <label>
+    Sort By:
+    <select id="sortSelect">
+      <option value="name">Product Name</option>
+      <option value="price">Price</option>
+    </select>
+  </label>
+  <button>Apply Filters</button>
+  </div>
+    </div>
     <div id="product-grid" class="product-grid"></div>
 
     <div id="modal" class="modal">
