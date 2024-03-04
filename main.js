@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         colorFilterDropdown.add(option);
       });
        updatePagination(products);
+       applyFilters();
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
@@ -194,7 +195,7 @@ function applyFilters() {
   const gridContainer = document.getElementById("product-grid");
   gridContainer.innerHTML = "";
 
-  displayProducts(filteredProducts);
+  displayProducts(filteredProducts, currentPage);
   updatePagination(filteredProducts);
 
 }
