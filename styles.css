@@ -16,7 +16,9 @@ body {
 .product-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .product-card {
