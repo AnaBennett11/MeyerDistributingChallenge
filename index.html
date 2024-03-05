@@ -8,7 +8,6 @@
   </head>
   <body>
     <div class="container">
-      <div id="filterPills"></div>
       <div id="filters">
         <label>
           Price Range:
@@ -20,24 +19,25 @@
           </select>
         </label>
         <label>
-          Product Type:
+          Product Type:<br />
           <input type="checkbox" id="lipstickFilter" value="lipstick" />
-          Lipstick
+          Lipstick <br />
           <input type="checkbox" id="eyeshadowFilter" value="eyeshadow" />
-          Eyeshadow
+          Eyeshadow <br />
           <input type="checkbox" id="foundationFilter" value="foundation" />
-          Foundation
-          <input type="checkbox" id="bronzerFilter" value="bronzer" /> Bronzer
-          <input type="checkbox" id="blushFilter" value="blush" />
-          Blush
+          Foundation<br />
+          <input type="checkbox" id="bronzerFilter" value="bronzer" />
+          Bronzer<br />
+          <input type="checkbox" id="blushFilter" value="blush" /> Blush <br />
           <input type="checkbox" id="eyelinerFilter" value="eyeliner" />
-          Eyeliner
+          Eyeliner <br />
         </label>
         <label>
-          Rating:
+          Rating:<br />
           <input type="checkbox" id="fourStarFilter" value="4" /> 4 Stars &
-          above <input type="checkbox" id="threeStarFilter" value="3" /> 3 Stars
-          & above
+          above <br />
+          <input type="checkbox" id="threeStarFilter" value="3" /> 3 Stars &
+          above <br />
         </label>
         <label>
           Product Colors:
@@ -53,22 +53,22 @@
           </select>
         </label>
         <button onclick="applyFilters()">Apply Filters</button>
-      </div>
-
-      <div id="product-grid" class="product-grid"></div>
-     <div id="pagination" class="pagination"></div>
+        <div id="pagination" class="pagination"></div>
+        <br>
         <label for="itemsPerPage">Items per page:</label>
         <select id="itemsPerPage" onchange="applyFilters()">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
         </select>
-    </div>
+        <div id="filterPills"></div>
+      </div>
+      <div id="product-grid" class="product-grid"></div>
 
     <div id="modal" class="modal">
       <span class="close" onclick="closeModal()">&times;</span>
     </div>
-
+    </div>
     <script src="main.js"></script>
   </body>
 </html>

@@ -1,37 +1,45 @@
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
+  background-color: #f8f8f8;
 }
 .container {
   display: flex;
   flex-direction: row;
+   max-width: 1200px;
+  margin: 0 auto;
 
 }
 #filters {
-    width: 250px; /* Adjust the width as needed */
+    width: 25%; 
     padding: 20px;
-    background-color: #f0f0f0; /* Optional: Add a background color to the filters */
+    background-color: #f0f0f0; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .product-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-grow: 1;
+  margin: 0 20px;
 }
 
 .product-card {
-  width: 300px;
-  margin: 20px;
-  padding: 15px;
+  width: 23%;
+  margin: 2%;
+  padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+  
 }
 
 .product-card img {
   max-width: 100%;
   height: auto;
-  margin-left: 70px;
+  margin-left: 10%;
 }
 
 .product-details {
@@ -42,16 +50,16 @@ body {
 
 .view-more-btn {
   margin-top: 10px;
-  background-color: #007bff;
+  background-color: #ff9900;;
   color: #fff;
-  padding: 5px 10px;
+  padding: 10px 20px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
 }
 
 .view-more-btn:hover {
-  background-color: #0056b3;
+  background-color: #e68a00;
 }
 .modal {
   display: none;
@@ -81,6 +89,7 @@ body {
   top: 10px;
   right: 10px;
   font-size: 20px;
+  color: #555;
   cursor: pointer;
 }
 .filter-pill {
@@ -89,7 +98,7 @@ body {
   padding: 5px 10px;
   background-color: #007bff;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 20px;
 }
 
 .pill-remove {

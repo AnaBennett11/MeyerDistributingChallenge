@@ -3,8 +3,6 @@ const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
   fetch(
     "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
@@ -22,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         option.text = color;
         colorFilterDropdown.add(option);
       });
-       updatePagination(products);
+      updatePagination(products);
+      applyFilters();
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
@@ -43,7 +42,6 @@ function displayProducts(products, page) {
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedProducts = products.slice(startIndex, endIndex);
-
 
   displayedProducts.forEach((product) => {
     const productCard = document.createElement("div");
@@ -66,7 +64,7 @@ function updatePagination(products) {
   const paginationContainer = document.getElementById("pagination");
   paginationContainer.innerHTML = "";
 
-    const pageDropdown = document.createElement("select");
+  const pageDropdown = document.createElement("select");
   pageDropdown.addEventListener("change", () => {
     currentPage = parseInt(pageDropdown.value);
     displayProducts(products, currentPage);
@@ -78,11 +76,11 @@ function updatePagination(products) {
     option.innerText = i;
     pageDropdown.appendChild(option);
   }
-
-    paginationContainer.appendChild(pageButton);
-  }
-
-
+  const pageParagraph = document.createElement("p");
+  pageParagraph.innerText = `Page number:`;
+  paginationContainer.appendChild(pageParagraph);
+  paginationContainer.appendChild(pageDropdown);
+}
 
 function openModal(productId) {
   const modal = document.getElementById("modal");
@@ -131,8 +129,6 @@ function applyFilters() {
   const fourStarFilter = document.getElementById("fourStarFilter").checked;
   const threeStarFilter = document.getElementById("threeStarFilter").checked;
   const selectedColor = document.getElementById("colorFilters").value;
- 
-
 
   addFilterPill("Price", priceFilter);
   addCheckboxFilterPill("Lipstick", lipstickFilter, removeFilter);
@@ -177,11 +173,10 @@ function applyFilters() {
     }
     return true;
   });
- 
+
   const sortSelect = document.getElementById("sortSelect");
   const selectedSortOption = sortSelect.value;
 
-  
   if (selectedSortOption === "name") {
     filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
   } else if (selectedSortOption === "price") {
@@ -194,9 +189,8 @@ function applyFilters() {
   const gridContainer = document.getElementById("product-grid");
   gridContainer.innerHTML = "";
 
-  displayProducts(filteredProducts);
+  displayProducts(filteredProducts, currentPage);
   updatePagination(filteredProducts);
-
 }
 
 function addFilterPill(label, value) {
