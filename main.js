@@ -90,14 +90,14 @@ function openModal(productId) {
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <img src="${selectedProduct.image_link}" alt="${selectedProduct.name}">
+      <img class="modal-image" src="${selectedProduct.image_link}" alt="${selectedProduct.name}">
       <h3>${selectedProduct.name}</h3>
       <p>${selectedProduct.description}</p>
       <p>Price: ${selectedProduct.price}</p>
       <p>Rating: ${selectedProduct.rating}</p>
       <a href="${
         selectedProduct.product_link
-      }" target="_blank" class="product-link-btn">Button to Product Page</a>
+      }" target="_blank" class="product-link-btn">Shop Here</a>
   
 
       <div class="color-list">
@@ -111,11 +111,14 @@ function openModal(productId) {
       </div>
     </div>
   `;
-  modal.style.display = "block";
+  $("#modal").modal("show");
 }
 function closeModal() {
   const modal = document.getElementById("modal");
-  modal.style.display = "none";
+  modal.innerHTML = ""; 
+  $("#modal").modal("hide");
+  $("body").removeClass("modal-open");
+  $(".modal-backdrop").remove();
 }
 
 function applyFilters() {

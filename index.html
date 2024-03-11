@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meyer Distributing Challenge</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -54,7 +61,7 @@
         </label>
         <button onclick="applyFilters()">Apply Filters</button>
         <div id="pagination" class="pagination"></div>
-        <br>
+        <br />
         <label for="itemsPerPage">Items per page:</label>
         <select id="itemsPerPage" onchange="applyFilters()">
           <option value="5">5</option>
@@ -65,9 +72,9 @@
       </div>
       <div id="product-grid" class="product-grid"></div>
 
-    <div id="modal" class="modal">
-      <span class="close" onclick="closeModal()">&times;</span>
-    </div>
+      <div id="modal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
     </div>
     <script src="main.js"></script>
   </body>
