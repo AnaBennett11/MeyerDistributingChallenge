@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meyer Distributing Challenge</title>
     <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+   
   </head>
   <body>
     <div class="container">
+      <form id="filtersForm">
       <div id="filters">
         <label>
           Price Range:
@@ -48,8 +44,8 @@
         </label>
         <label>
           Product Colors:
-          <select id="colorFilters">
-            <option value="all">All Colors</option>
+          <select class="allDropdown" id="colorFilters">
+            <option  value="all">All Colors</option>
           </select>
         </label>
         <label>
@@ -59,7 +55,7 @@
             <option value="price">Price</option>
           </select>
         </label>
-        <button onclick="applyFilters()">Apply Filters</button>
+        <button type="button" class="btn btn-primary applyFiltersBtn" onclick="applyFilters()">Apply Filters</button>
         <div id="pagination" class="pagination"></div>
         <br />
         <label for="itemsPerPage">Items per page:</label>
@@ -70,12 +66,16 @@
         </select>
         <div id="filterPills"></div>
       </div>
+      </form>
       <div id="product-grid" class="product-grid"></div>
 
       <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
       </div>
     </div>
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
