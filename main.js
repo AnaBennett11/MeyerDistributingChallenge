@@ -2,8 +2,10 @@ let products;
 const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
+let filterPillsContainer; 
 
 document.addEventListener("DOMContentLoaded", () => {
+  filterPillsContainer = document.getElementById("filterPills");
   fetch(
     "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
   )
@@ -90,7 +92,9 @@ function openModal(productId) {
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <img class="modal-image" src="${selectedProduct.image_link}" alt="${selectedProduct.name}">
+      <img class="modal-image" src="${selectedProduct.image_link}" alt="${
+    selectedProduct.name
+  }">
       <h3>${selectedProduct.name}</h3>
       <p>${selectedProduct.description}</p>
       <p>Price: ${selectedProduct.price}</p>
@@ -115,7 +119,7 @@ function openModal(productId) {
 }
 function closeModal() {
   const modal = document.getElementById("modal");
-  modal.innerHTML = ""; 
+  modal.innerHTML = "";
   $("#modal").modal("hide");
   $("body").removeClass("modal-open");
   $(".modal-backdrop").remove();
@@ -196,19 +200,32 @@ function applyFilters() {
   updatePagination(filteredProducts);
 }
 
-function addFilterPill(label, value) {
+function addFilterPill(label, value, isCheckbox = false) {
   if (value !== "all") {
-    const filterPillsContainer = document.getElementById("filterPills");
-    const pill = document.createElement("div");
-    pill.classList.add("filter-pill");
-    pill.innerHTML = `${label}: ${value} <span class="pill-remove" onclick="removeFilter('${label}')">&times;</span>`;
-    filterPillsContainer.appendChild(pill);
+    const existingPill = document.querySelector(
+      `.filter-pill[data-label="${label}"]`
+    );
+
+    if (!existingPill) {
+      const pill = document.createElement("div");
+      pill.classList.add("filter-pill");
+      pill.dataset.label = label;
+      pill.innerHTML = `${label}: ${value} <span class="pill-remove" onclick="removeFilter('${label}')">&times;</span>`;
+      filterPillsContainer.appendChild(pill);
+
+      if (isCheckbox) {
+        pill.classList.add("checkbox-pill");
+      }
+    }
   }
 }
 
 function addCheckboxFilterPill(label, isChecked) {
-  if (isChecked) {
-    addFilterPill(label, "Yes");
+  const existingPill = document.querySelector(
+    `.filter-pill[data-label="${label}"]`
+  );
+  if (isChecked && !existingPill) {
+    addFilterPill(label, "Yes", true);
   }
 }
 
@@ -217,49 +234,37 @@ function removeFilter(label) {
   const filterPills =
     filterPillsContainer.getElementsByClassName("filter-pill");
 
-  if (
-    label === "Price" ||
-    label === "Lipstick" ||
-    label === "Eyeshadow" ||
-    label === "Foundation" ||
-    label === "Bronzer" ||
-    label === "Blush" ||
-    label === "Eyeliner" ||
-    label === "4 Stars & above" ||
-    label === "3 Stars & above" ||
-    label === "Color"
-  ) {
-    for (let i = 0; i < filterPills.length; i++) {
-      const pill = filterPills[i];
-      if (pill.innerText.includes(`${label}:`)) {
-        filterPillsContainer.removeChild(pill);
-        break;
-      }
-    }
-    if (label === "Price") {
-      document.getElementById("priceFilter").value = "all";
-    } else if (label === "Lipstick") {
-      document.getElementById("lipstickFilter").checked = false;
-    } else if (label === "Eyeshadow") {
-      document.getElementById("eyeshadowFilter").checked = false;
-    } else if (label === "Foundation") {
-      document.getElementById("foundationFilter").checked = false;
-    } else if (label === "Bronzer") {
-      document.getElementById("bronzerFilter").checked = false;
-    } else if (label === "Blush") {
-      document.getElementById("blushFilter").checked = false;
-    } else if (label === "Eyeliner") {
-      document.getElementById("eyelinerFilter").checked = false;
-    } else if (label === "4 Stars & above") {
-      document.getElementById("fourStarFilter").checked = false;
-    } else if (label === "3 Stars & above") {
-      document.getElementById("threeStarFilter").checked = false;
-    } else if (label === "Color") {
-      document.getElementById("colorFilters").value = "all";
+  for (let i = filterPills.length - 1; i >= 0; i--) {
+    const pill = filterPills[i];
+    if (pill.innerText.includes(`${label}:`)) {
+      filterPillsContainer.removeChild(pill);
     }
   }
+  if (label === "Price") {
+    document.getElementById("priceFilter").value = "all";
+  } else if (label === "Lipstick") {
+    document.getElementById("lipstickFilter").checked = false;
+  } else if (label === "Eyeshadow") {
+    document.getElementById("eyeshadowFilter").checked = false;
+  } else if (label === "Foundation") {
+    document.getElementById("foundationFilter").checked = false;
+  } else if (label === "Bronzer") {
+    document.getElementById("bronzerFilter").checked = false;
+  } else if (label === "Blush") {
+    document.getElementById("blushFilter").checked = false;
+  } else if (label === "Eyeliner") {
+    document.getElementById("eyelinerFilter").checked = false;
+  } else if (label === "4 Stars & above") {
+    document.getElementById("fourStarFilter").checked = false;
+  } else if (label === "3 Stars & above") {
+    document.getElementById("threeStarFilter").checked = false;
+  } else if (label === "Color") {
+    document.getElementById("colorFilters").value = "all";
+  }
+
   applyFilters();
 }
+
 itemsPerPageSelect.addEventListener("change", () => {
   itemsPerPage = parseInt(itemsPerPageSelect.value);
   displayProducts(products, currentPage);
