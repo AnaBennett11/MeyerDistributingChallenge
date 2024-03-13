@@ -10,11 +10,11 @@
   </head>
   <body>
     <div class="container">
-      <form id="filtersForm">
-      <div id="filters">
+      <form id="filtersForm" class="form">
+      <div id="filters" class="form-group">
         <label>
           Price Range:
-          <select id="priceFilter">
+          <select id="priceFilter" class="form-control" onchange="applyFilters()">
             <option value="all">All</option>
             <option value="0-10">$0 - $10</option>
             <option value="10-20">$10 - $20</option>
@@ -23,43 +23,42 @@
         </label>
         <label>
           Product Type:<br />
-          <input type="checkbox" id="lipstickFilter" value="lipstick" />
+          <input class="form-check-input" type="checkbox" id="lipstickFilter" value="lipstick" onchange="applyFilters()" />
           Lipstick <br />
-          <input type="checkbox" id="eyeshadowFilter" value="eyeshadow" />
+          <input class="form-check-input" type="checkbox" id="eyeshadowFilter" value="eyeshadow" onchange="applyFilters()" />
           Eyeshadow <br />
-          <input type="checkbox" id="foundationFilter" value="foundation" />
+          <input class="form-check-input" type="checkbox" id="foundationFilter" value="foundation" onchange="applyFilters()" />
           Foundation<br />
-          <input type="checkbox" id="bronzerFilter" value="bronzer" />
+          <input class="form-check-input" type="checkbox" id="bronzerFilter" value="bronzer" onchange="applyFilters()" />
           Bronzer<br />
-          <input type="checkbox" id="blushFilter" value="blush" /> Blush <br />
-          <input type="checkbox" id="eyelinerFilter" value="eyeliner" />
+          <input class="form-check-input" type="checkbox" id="blushFilter" value="blush" onchange="applyFilters()" /> Blush <br />
+          <input class="form-check-input" type="checkbox" id="eyelinerFilter" value="eyeliner" onchange="applyFilters()" />
           Eyeliner <br />
         </label>
         <label>
           Rating:<br />
-          <input type="checkbox" id="fourStarFilter" value="4" /> 4 Stars &
+          <input class="form-check-input" type="checkbox" id="fourStarFilter" value="4" onchange="applyFilters()"/> 4 Stars &
           above <br />
-          <input type="checkbox" id="threeStarFilter" value="3" /> 3 Stars &
+          <input class="form-check-input" type="checkbox" id="threeStarFilter" value="3" onchange="applyFilters()"/> 3 Stars &
           above <br />
         </label>
         <label>
           Product Colors:
-          <select class="allDropdown" id="colorFilters">
+          <select class="allDropdown" id="colorFilters" class="form-control" onchange="applyFilters()">
             <option  value="all">All Colors</option>
           </select>
         </label>
         <label>
           Sort By:
-          <select id="sortSelect">
+          <select id="sortSelect" onchange="applyFilters()">
             <option value="name">Product Name</option>
             <option value="price">Price</option>
           </select>
         </label>
-        <button type="button" class="btn btn-primary applyFiltersBtn" onclick="applyFilters()">Apply Filters</button>
         <div id="pagination" class="pagination"></div>
         <br />
         <label for="itemsPerPage">Items per page:</label>
-        <select id="itemsPerPage" onchange="applyFilters()">
+        <select id="itemsPerPage" class="form-control" onchange="applyFilters()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>

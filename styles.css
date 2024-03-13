@@ -22,6 +22,11 @@ body {
   border-radius: 10px;
   margin-right: 20px;
 }
+
+.allDropdown{
+  height: 2%;
+  width: 75%;
+}
 .filter-pill {
   display: inline-block;
   margin: 5px;
