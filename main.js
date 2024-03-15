@@ -1,4 +1,4 @@
-let products;
+let products = null; //look up on best practices to start on null
 const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
@@ -66,22 +66,29 @@ function updatePagination(products) {
   const paginationContainer = document.getElementById("pagination");
   paginationContainer.innerHTML = "";
 
-  const pageDropdown = document.createElement("select");
-  pageDropdown.addEventListener("change", () => {
-    currentPage = parseInt(pageDropdown.value);
-    displayProducts(products, currentPage);
-  });
+  const backButton = document.createElement("button");
+  backButton.innerHTML = "&laquo;"; 
+  backButton.onclick = function () {
+    if (currentPage > 1) {
+      currentPage -= 1;
+      displayProducts(products, currentPage);
+      updatePagination(products);
+    }
+  };
+  backButton.disabled = currentPage === 1;
+  paginationContainer.appendChild(backButton);
 
-  for (let i = 1; i <= totalPages; i++) {
-    const option = document.createElement("option");
-    option.value = i;
-    option.innerText = i;
-    pageDropdown.appendChild(option);
-  }
-  const pageParagraph = document.createElement("p");
-  pageParagraph.innerText = `Page number:`;
-  paginationContainer.appendChild(pageParagraph);
-  paginationContainer.appendChild(pageDropdown);
+  const forwardButton = document.createElement("button");
+  forwardButton.innerHTML = "&raquo;"; 
+  forwardButton.onclick = function () {
+    if (currentPage < totalPages) {
+      currentPage += 1;
+      displayProducts(products, currentPage);
+      updatePagination(products);
+    }
+  };
+  forwardButton.disabled = currentPage === totalPages;
+  paginationContainer.appendChild(forwardButton);
 }
 
 function openModal(productId) {
