@@ -2,30 +2,31 @@ let products = null; //look up on best practices to start on null
 const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
-let filterPillsContainer; 
+let filterPillsContainer;
 
-document.addEventListener("DOMContentLoaded", () => {
-  filterPillsContainer = document.getElementById("filterPills");
-  fetch(
-    "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      products = data;
-      displayProducts(products, currentPage);
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+     filterPillsContainer = document.getElementById("filterPills");
+    const response = await fetch(
+      "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
+    );
+    products = await response.json();
 
-      const colorFilterDropdown = document.getElementById("colorFilters");
-      const uniqueColors = getUniqueColors(products);
-      uniqueColors.forEach((color) => {
-        const option = document.createElement("option");
-        option.value = color;
-        option.text = color;
-        colorFilterDropdown.add(option);
-      });
-      updatePagination(products);
-      applyFilters();
-    })
-    .catch((error) => console.error("Error fetching data:", error));
+    displayProducts(products, currentPage);
+
+    const colorFilterDropdown = document.getElementById("colorFilters");
+    const uniqueColors = getUniqueColors(products);
+    uniqueColors.forEach((color) => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.text = color;
+      colorFilterDropdown.add(option);
+    });
+    updatePagination(products);
+    applyFilters();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 });
 function getUniqueColors(products) {
   const uniqueColors = new Set();
@@ -67,7 +68,7 @@ function updatePagination(products) {
   paginationContainer.innerHTML = "";
 
   const backButton = document.createElement("button");
-  backButton.innerHTML = "&laquo;"; 
+  backButton.innerHTML = "&laquo;";
   backButton.onclick = function () {
     if (currentPage > 1) {
       currentPage -= 1;
@@ -79,7 +80,7 @@ function updatePagination(products) {
   paginationContainer.appendChild(backButton);
 
   const forwardButton = document.createElement("button");
-  forwardButton.innerHTML = "&raquo;"; 
+  forwardButton.innerHTML = "&raquo;";
   forwardButton.onclick = function () {
     if (currentPage < totalPages) {
       currentPage += 1;
