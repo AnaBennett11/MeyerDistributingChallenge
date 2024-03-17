@@ -4,30 +4,40 @@ let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
 let filterPillsContainer;
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function fetchProducts() {
   try {
-     filterPillsContainer = document.getElementById("filterPills");
-    const response = await fetch(
-      "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
-    );
-    products = await response.json();
+    const response = await fetch("https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+     console.error("Error fetching data:", error);
+     return [];
+  }
+}
 
+document.addEventListener("DOMContentLoaded", async () => {
+    filterPillsContainer = document.getElementById("filterPills");
+    products = await fetchProducts();
+    if (products.length > 0){
     displayProducts(products, currentPage);
+    generateColorFilterDropdown();
+    updatePagination(products);
+    applyFilters();
+  } else {
+        console.log("No products found or error in fetching products.");
+  }
+});
 
-    const colorFilterDropdown = document.getElementById("colorFilters");
+function generateColorFilterDropdown() {
+  const colorFilterDropdown = document.getElementById("colorFilters");
     const uniqueColors = getUniqueColors(products);
     uniqueColors.forEach((color) => {
       const option = document.createElement("option");
       option.value = color;
       option.text = color;
       colorFilterDropdown.add(option);
-    });
-    updatePagination(products);
-    applyFilters();
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
 });
+ };
 function getUniqueColors(products) {
   const uniqueColors = new Set();
   products.forEach((product) => {
