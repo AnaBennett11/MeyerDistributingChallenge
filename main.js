@@ -1,4 +1,4 @@
-let products = null; //look up on best practices to start on null
+let products = null; 
 const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
