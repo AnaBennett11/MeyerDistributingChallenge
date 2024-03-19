@@ -1,30 +1,43 @@
-let products;
+let products = null; 
 const itemsPerPageSelect = document.getElementById("itemsPerPage");
 let currentPage = 1;
 let itemsPerPage = parseInt(itemsPerPageSelect.value);
+let filterPillsContainer;
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetch(
-    "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      products = data;
-      displayProducts(products, currentPage);
+async function fetchProducts() {
+  try {
+    const response = await fetch("https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+     console.error("Error fetching data:", error);
+     return [];
+  }
+}
 
-      const colorFilterDropdown = document.getElementById("colorFilters");
-      const uniqueColors = getUniqueColors(products);
-      uniqueColors.forEach((color) => {
-        const option = document.createElement("option");
-        option.value = color;
-        option.text = color;
-        colorFilterDropdown.add(option);
-      });
-      updatePagination(products);
-      applyFilters();
-    })
-    .catch((error) => console.error("Error fetching data:", error));
+document.addEventListener("DOMContentLoaded", async () => {
+    filterPillsContainer = document.getElementById("filterPills");
+    products = await fetchProducts();
+    if (products.length > 0){
+    displayProducts(products, currentPage);
+    generateColorFilterDropdown();
+    updatePagination(products);
+    applyFilters();
+  } else {
+        console.log("No products found or error in fetching products.");
+  }
 });
+
+function generateColorFilterDropdown() {
+  const colorFilterDropdown = document.getElementById("colorFilters");
+    const uniqueColors = getUniqueColors(products);
+    uniqueColors.forEach((color) => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.text = color;
+      colorFilterDropdown.add(option);
+});
+ };
 function getUniqueColors(products) {
   const uniqueColors = new Set();
   products.forEach((product) => {
@@ -64,22 +77,29 @@ function updatePagination(products) {
   const paginationContainer = document.getElementById("pagination");
   paginationContainer.innerHTML = "";
 
-  const pageDropdown = document.createElement("select");
-  pageDropdown.addEventListener("change", () => {
-    currentPage = parseInt(pageDropdown.value);
-    displayProducts(products, currentPage);
-  });
+  const backButton = document.createElement("button");
+  backButton.innerHTML = "&laquo;";
+  backButton.onclick = function () {
+    if (currentPage > 1) {
+      currentPage -= 1;
+      displayProducts(products, currentPage);
+      updatePagination(products);
+    }
+  };
+  backButton.disabled = currentPage === 1;
+  paginationContainer.appendChild(backButton);
 
-  for (let i = 1; i <= totalPages; i++) {
-    const option = document.createElement("option");
-    option.value = i;
-    option.innerText = i;
-    pageDropdown.appendChild(option);
-  }
-  const pageParagraph = document.createElement("p");
-  pageParagraph.innerText = `Page number:`;
-  paginationContainer.appendChild(pageParagraph);
-  paginationContainer.appendChild(pageDropdown);
+  const forwardButton = document.createElement("button");
+  forwardButton.innerHTML = "&raquo;";
+  forwardButton.onclick = function () {
+    if (currentPage < totalPages) {
+      currentPage += 1;
+      displayProducts(products, currentPage);
+      updatePagination(products);
+    }
+  };
+  forwardButton.disabled = currentPage === totalPages;
+  paginationContainer.appendChild(forwardButton);
 }
 
 function openModal(productId) {
@@ -90,14 +110,16 @@ function openModal(productId) {
   modal.innerHTML = `
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
-      <img src="${selectedProduct.image_link}" alt="${selectedProduct.name}">
+      <img class="modal-image" src="${selectedProduct.image_link}" alt="${
+    selectedProduct.name
+  }">
       <h3>${selectedProduct.name}</h3>
       <p>${selectedProduct.description}</p>
       <p>Price: ${selectedProduct.price}</p>
       <p>Rating: ${selectedProduct.rating}</p>
       <a href="${
         selectedProduct.product_link
-      }" target="_blank" class="product-link-btn">Button to Product Page</a>
+      }" target="_blank" class="product-link-btn">Shop Here</a>
   
 
       <div class="color-list">
@@ -111,11 +133,14 @@ function openModal(productId) {
       </div>
     </div>
   `;
-  modal.style.display = "block";
+  $("#modal").modal("show");
 }
 function closeModal() {
   const modal = document.getElementById("modal");
-  modal.style.display = "none";
+  modal.innerHTML = "";
+  $("#modal").modal("hide");
+  $("body").removeClass("modal-open");
+  $(".modal-backdrop").remove();
 }
 
 function applyFilters() {
@@ -193,19 +218,32 @@ function applyFilters() {
   updatePagination(filteredProducts);
 }
 
-function addFilterPill(label, value) {
+function addFilterPill(label, value, isCheckbox = false) {
   if (value !== "all") {
-    const filterPillsContainer = document.getElementById("filterPills");
-    const pill = document.createElement("div");
-    pill.classList.add("filter-pill");
-    pill.innerHTML = `${label}: ${value} <span class="pill-remove" onclick="removeFilter('${label}')">&times;</span>`;
-    filterPillsContainer.appendChild(pill);
+    const existingPill = document.querySelector(
+      `.filter-pill[data-label="${label}"]`
+    );
+
+    if (!existingPill) {
+      const pill = document.createElement("div");
+      pill.classList.add("filter-pill");
+      pill.dataset.label = label;
+      pill.innerHTML = `${label}: ${value} <span class="pill-remove" onclick="removeFilter('${label}')">&times;</span>`;
+      filterPillsContainer.appendChild(pill);
+
+      if (isCheckbox) {
+        pill.classList.add("checkbox-pill");
+      }
+    }
   }
 }
 
 function addCheckboxFilterPill(label, isChecked) {
-  if (isChecked) {
-    addFilterPill(label, "Yes");
+  const existingPill = document.querySelector(
+    `.filter-pill[data-label="${label}"]`
+  );
+  if (isChecked && !existingPill) {
+    addFilterPill(label, "Yes", true);
   }
 }
 
@@ -214,49 +252,37 @@ function removeFilter(label) {
   const filterPills =
     filterPillsContainer.getElementsByClassName("filter-pill");
 
-  if (
-    label === "Price" ||
-    label === "Lipstick" ||
-    label === "Eyeshadow" ||
-    label === "Foundation" ||
-    label === "Bronzer" ||
-    label === "Blush" ||
-    label === "Eyeliner" ||
-    label === "4 Stars & above" ||
-    label === "3 Stars & above" ||
-    label === "Color"
-  ) {
-    for (let i = 0; i < filterPills.length; i++) {
-      const pill = filterPills[i];
-      if (pill.innerText.includes(`${label}:`)) {
-        filterPillsContainer.removeChild(pill);
-        break;
-      }
-    }
-    if (label === "Price") {
-      document.getElementById("priceFilter").value = "all";
-    } else if (label === "Lipstick") {
-      document.getElementById("lipstickFilter").checked = false;
-    } else if (label === "Eyeshadow") {
-      document.getElementById("eyeshadowFilter").checked = false;
-    } else if (label === "Foundation") {
-      document.getElementById("foundationFilter").checked = false;
-    } else if (label === "Bronzer") {
-      document.getElementById("bronzerFilter").checked = false;
-    } else if (label === "Blush") {
-      document.getElementById("blushFilter").checked = false;
-    } else if (label === "Eyeliner") {
-      document.getElementById("eyelinerFilter").checked = false;
-    } else if (label === "4 Stars & above") {
-      document.getElementById("fourStarFilter").checked = false;
-    } else if (label === "3 Stars & above") {
-      document.getElementById("threeStarFilter").checked = false;
-    } else if (label === "Color") {
-      document.getElementById("colorFilters").value = "all";
+  for (let i = filterPills.length - 1; i >= 0; i--) {
+    const pill = filterPills[i];
+    if (pill.innerText.includes(`${label}:`)) {
+      filterPillsContainer.removeChild(pill);
     }
   }
+  if (label === "Price") {
+    document.getElementById("priceFilter").value = "all";
+  } else if (label === "Lipstick") {
+    document.getElementById("lipstickFilter").checked = false;
+  } else if (label === "Eyeshadow") {
+    document.getElementById("eyeshadowFilter").checked = false;
+  } else if (label === "Foundation") {
+    document.getElementById("foundationFilter").checked = false;
+  } else if (label === "Bronzer") {
+    document.getElementById("bronzerFilter").checked = false;
+  } else if (label === "Blush") {
+    document.getElementById("blushFilter").checked = false;
+  } else if (label === "Eyeliner") {
+    document.getElementById("eyelinerFilter").checked = false;
+  } else if (label === "4 Stars & above") {
+    document.getElementById("fourStarFilter").checked = false;
+  } else if (label === "3 Stars & above") {
+    document.getElementById("threeStarFilter").checked = false;
+  } else if (label === "Color") {
+    document.getElementById("colorFilters").value = "all";
+  }
+
   applyFilters();
 }
+
 itemsPerPageSelect.addEventListener("change", () => {
   itemsPerPage = parseInt(itemsPerPageSelect.value);
   displayProducts(products, currentPage);

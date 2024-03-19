@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meyer Distributing Challenge</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+   
   </head>
   <body>
     <div class="container">
-      <div id="filters">
+      <form id="filtersForm" class="form">
+      <div id="filters" class="form-group">
         <label>
           Price Range:
-          <select id="priceFilter">
+          <select id="priceFilter" class="form-control" onchange="applyFilters()">
             <option value="all">All</option>
             <option value="0-10">$0 - $10</option>
             <option value="10-20">$10 - $20</option>
@@ -20,55 +23,58 @@
         </label>
         <label>
           Product Type:<br />
-          <input type="checkbox" id="lipstickFilter" value="lipstick" />
+          <input class="form-check-input" type="checkbox" id="lipstickFilter" value="lipstick" onchange="applyFilters()" />
           Lipstick <br />
-          <input type="checkbox" id="eyeshadowFilter" value="eyeshadow" />
+          <input class="form-check-input" type="checkbox" id="eyeshadowFilter" value="eyeshadow" onchange="applyFilters()" />
           Eyeshadow <br />
-          <input type="checkbox" id="foundationFilter" value="foundation" />
+          <input class="form-check-input" type="checkbox" id="foundationFilter" value="foundation" onchange="applyFilters()" />
           Foundation<br />
-          <input type="checkbox" id="bronzerFilter" value="bronzer" />
+          <input class="form-check-input" type="checkbox" id="bronzerFilter" value="bronzer" onchange="applyFilters()" />
           Bronzer<br />
-          <input type="checkbox" id="blushFilter" value="blush" /> Blush <br />
-          <input type="checkbox" id="eyelinerFilter" value="eyeliner" />
+          <input class="form-check-input" type="checkbox" id="blushFilter" value="blush" onchange="applyFilters()" /> Blush <br />
+          <input class="form-check-input" type="checkbox" id="eyelinerFilter" value="eyeliner" onchange="applyFilters()" />
           Eyeliner <br />
         </label>
         <label>
           Rating:<br />
-          <input type="checkbox" id="fourStarFilter" value="4" /> 4 Stars &
+          <input class="form-check-input" type="checkbox" id="fourStarFilter" value="4" onchange="applyFilters()"/> 4 Stars &
           above <br />
-          <input type="checkbox" id="threeStarFilter" value="3" /> 3 Stars &
+          <input class="form-check-input" type="checkbox" id="threeStarFilter" value="3" onchange="applyFilters()"/> 3 Stars &
           above <br />
         </label>
         <label>
           Product Colors:
-          <select id="colorFilters">
-            <option value="all">All Colors</option>
+          <select class="allDropdown" id="colorFilters" class="form-control" onchange="applyFilters()">
+            <option  value="all">All Colors</option>
           </select>
         </label>
         <label>
           Sort By:
-          <select id="sortSelect">
+          <select id="sortSelect" onchange="applyFilters()">
             <option value="name">Product Name</option>
             <option value="price">Price</option>
           </select>
         </label>
-        <button onclick="applyFilters()">Apply Filters</button>
         <div id="pagination" class="pagination"></div>
-        <br>
+        <br />
         <label for="itemsPerPage">Items per page:</label>
-        <select id="itemsPerPage" onchange="applyFilters()">
+        <select id="itemsPerPage" class="form-control" onchange="applyFilters()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
         </select>
         <div id="filterPills"></div>
       </div>
+      </form>
       <div id="product-grid" class="product-grid"></div>
 
-    <div id="modal" class="modal">
-      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
     </div>
-    </div>
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

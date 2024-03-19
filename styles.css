@@ -6,17 +6,55 @@ body {
 .container {
   display: flex;
   flex-direction: row;
-   max-width: 1200px;
-  margin: 0 auto;
-
+  max-width: 100%;
+  margin: 20px auto;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-#filters {
-    width: 25%; 
-    padding: 20px;
-    background-color: #f0f0f0; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+#filtersForm {
+  width: 25%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-right: 20px;
 }
 
+.allDropdown{
+  height: 2%;
+  width: 75%;
+}
+.filter-pill {
+  display: inline-block;
+  margin: 5px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 20px;
+}
+
+.pill-remove {
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: bold;
+}
+.pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 .product-grid {
   display: flex;
   flex-wrap: wrap;
@@ -32,30 +70,38 @@ body {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  
-  
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.03);
 }
 
 .product-card img {
   max-width: 100%;
   height: auto;
-  margin-left: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .product-details {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .view-more-btn {
   margin-top: 10px;
-  background-color: #ff9900;;
+  background-color: #ff9900;
   color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .view-more-btn:hover {
@@ -81,7 +127,7 @@ body {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  max-width: 40%;
 }
 
 .close {
@@ -92,17 +138,10 @@ body {
   color: #555;
   cursor: pointer;
 }
-.filter-pill {
-  display: inline-block;
-  margin: 5px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 20px;
+
+.modal-image {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
 }
 
-.pill-remove {
-  cursor: pointer;
-  margin-left: 5px;
-  font-weight: bold;
-}
